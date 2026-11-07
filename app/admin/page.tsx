@@ -1,0 +1,57 @@
+"use client";
+
+import { useState } from "react";
+import { Activity, ArrowDownRight, ArrowUpRight, Bell, CalendarDays, ChevronDown, CircleDollarSign, Dumbbell, LayoutDashboard, Menu, MessageSquare, MoreHorizontal, Search, Settings, ShieldCheck, Users, X } from "lucide-react";
+
+const navItems = [
+  { label: "Overview", icon: LayoutDashboard },
+  { label: "Members", icon: Users },
+  { label: "Memberships", icon: ShieldCheck },
+  { label: "Trainers", icon: Dumbbell },
+  { label: "Enquiries", icon: MessageSquare },
+  { label: "Schedule", icon: CalendarDays },
+  { label: "Settings", icon: Settings }
+];
+const members = [
+  { name: "Aarav Sharma", email: "aarav.sharma@email.com", plan: "Quarterly", status: "Active", joined: "Oct 24, 2026" },
+  { name: "Priya Singh", email: "priya.s@email.com", plan: "Yearly", status: "Active", joined: "Oct 22, 2026" },
+  { name: "Rohan Verma", email: "rohan.v@email.com", plan: "Monthly", status: "Pending", joined: "Oct 21, 2026" },
+  { name: "Ananya Das", email: "ananya.d@email.com", plan: "Quarterly", status: "Active", joined: "Oct 19, 2026" },
+  { name: "Kabir Khan", email: "kabir.k@email.com", plan: "Monthly", status: "Expired", joined: "Oct 15, 2026" }
+];
+
+export default function AdminPage() {
+  const [active, setActive] = useState("Overview");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [notice, setNotice] = useState("");
+  const filtered = members.filter(m => (m.name + m.email + m.plan + m.status).toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <main className="min-h-screen bg-[#f5f6f8] text-[#17191d]">
+      <aside className={`fixed inset-y-0 left-0 z-40 flex w-[250px] flex-col bg-[#111315] px-5 py-6 text-white transition-transform lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="mb-10 flex items-center justify-between"><a href="/" className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center bg-[#d9ff35] text-black"><Dumbbell size={21}/></span><span><b className="display-font text-2xl">IRONCORE</b><small className="block text-[8px] font-bold tracking-[.28em] text-[#d9ff35]">ADMIN PANEL</small></span></a><button onClick={() => setMobileOpen(false)} className="lg:hidden"><X/></button></div>
+        <p className="mb-4 px-3 text-[9px] font-bold tracking-[.2em] text-white/35">WORKSPACE</p>
+        <nav className="space-y-1">{navItems.map(item => { const Icon = item.icon; return <button key={item.label} onClick={() => {setActive(item.label);setMobileOpen(false);setNotice(item.label === "Overview" ? "" : item.label + " section is a UI preview. Data integration comes in Phase 2.");}} className={`flex w-full items-center gap-3 px-3 py-3 text-left text-xs font-semibold transition ${active === item.label ? "bg-[#d9ff35] text-black" : "text-white/55 hover:bg-white/5 hover:text-white"}`}><Icon size={16}/>{item.label}</button>;})}</nav>
+        <div className="mt-auto border border-white/10 bg-white/[.04] p-4"><div className="mb-3 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#d9ff35]"/><span className="text-[9px] font-bold tracking-wider text-white/70">DEMO ENVIRONMENT</span></div><p className="text-[10px] leading-5 text-white/40">Sample data only. Connect a secure backend before managing real member information.</p><a href="/" className="mt-4 block text-[10px] font-bold text-[#d9ff35]">← VIEW PUBLIC WEBSITE</a></div>
+      </aside>
+      {mobileOpen && <button aria-label="Close menu overlay" onClick={() => setMobileOpen(false)} className="fixed inset-0 z-30 bg-black/50 lg:hidden"/>}
+      <div className="min-h-screen lg:pl-[250px]">
+        <header className="sticky top-0 z-20 flex h-[76px] items-center justify-between border-b border-[#e7e8eb] bg-white px-5 md:px-9"><div className="flex items-center gap-3"><button className="lg:hidden" onClick={() => setMobileOpen(true)}><Menu/></button><div><p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#999da5]">IRONCORE FITNESS / {active}</p><h1 className="mt-1 text-lg font-bold">{active === "Overview" ? "Dashboard overview" : active}</h1></div></div><div className="flex items-center gap-4"><button aria-label="Notifications" className="relative text-[#737780]"><Bell size={19}/><span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#d9ff35]"/></button><div className="flex items-center gap-2 border-l border-[#e7e8eb] pl-4"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#17191d] text-xs font-bold text-[#d9ff35]">IC</span><div className="hidden sm:block"><p className="text-xs font-bold">Club Admin</p><p className="text-[10px] text-[#999da5]">Administrator</p></div><ChevronDown size={14} className="text-[#999da5]"/></div></div></header>
+        <div className="p-5 md:p-9">
+          {notice && <div className="mb-6 flex items-center justify-between gap-4 border border-[#dce6b0] bg-[#f5f9e8] px-4 py-3 text-xs text-[#59652b]">{notice}<button onClick={() => setNotice("")}><X size={15}/></button></div>}
+          <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-xs text-[#8a8e96]">Saturday, November 7, 2026</p><h2 className="mt-1 text-2xl font-extrabold tracking-tight">Good morning, Admin <span>✦</span></h2><p className="mt-1 text-xs text-[#8a8e96]">Here's what's happening at your club today.</p></div><button onClick={() => setNotice("Export is a demo action. CSV export will be connected in a later phase.")} className="flex items-center justify-center gap-2 border border-[#dfe1e5] bg-white px-4 py-3 text-[10px] font-bold uppercase tracking-wider hover:border-[#aab0ba]">Export report <ArrowUpRight size={14}/></button></div>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[{label:"Total members",value:"248",change:"+12.5%",icon:Users,up:true},{label:"Active memberships",value:"192",change:"+8.2%",icon:ShieldCheck,up:true},{label:"Monthly revenue",value:"₹1,84,500",change:"+6.4%",icon:CircleDollarSign,up:true},{label:"New enquiries",value:"36",change:"-2.1%",icon:MessageSquare,up:false}].map(stat => {const Icon=stat.icon;return <div key={stat.label} className="rounded-xl border border-[#e8e9ed] bg-white p-5 shadow-[0_2px_12px_rgba(20,25,35,.025)]"><div className="flex items-center justify-between"><p className="text-xs font-medium text-[#858a94]">{stat.label}</p><span className="grid h-9 w-9 place-items-center rounded-lg bg-[#f4f6e9] text-[#718b13]"><Icon size={17}/></span></div><p className="mt-4 text-2xl font-extrabold tracking-tight">{stat.value}</p><div className="mt-2 flex items-center gap-1 text-[10px]"><span className={stat.up ? "text-[#4b9a67]" : "text-[#c77a54]"}>{stat.up ? <ArrowUpRight size={13} className="inline"/> : <ArrowDownRight size={13} className="inline"/>} {stat.change}</span><span className="text-[#a0a4ab]">vs last month</span></div></div>;})}
+          </div>
+          <div className="mt-6 grid gap-5 xl:grid-cols-[1.5fr_1fr]">
+            <section className="rounded-xl border border-[#e8e9ed] bg-white p-5 md:p-6"><div className="flex items-center justify-between"><div><h3 className="text-sm font-bold">Membership growth</h3><p className="mt-1 text-[10px] text-[#9a9ea6]">New members over the last 7 months</p></div><button className="border border-[#e8e9ed] px-3 py-2 text-[10px] font-semibold text-[#737780]">Last 7 months <ChevronDown size={12} className="ml-2 inline"/></button></div><div className="mt-8 flex h-[210px] items-end justify-between gap-3 border-b border-[#eceef0] px-2">{[{m:"May",v:42},{m:"Jun",v:58},{m:"Jul",v:48},{m:"Aug",v:76},{m:"Sep",v:62},{m:"Oct",v:91},{m:"Nov",v:72}].map(d=><div key={d.m} className="flex h-full flex-1 flex-col items-center justify-end gap-3"><span className="text-[9px] text-[#9ca1aa]">{d.v}</span><div className="w-full max-w-[38px] rounded-t-md bg-[#d9ff35]" style={{height:`${d.v}%`}}/><span className="pb-2 text-[9px] text-[#8e939c]">{d.m}</span></div>)}</div><div className="mt-4 flex items-center gap-2 text-[10px] text-[#969ba3]"><span className="h-2 w-2 rounded-sm bg-[#d9ff35]"/>New member registrations</div></section>
+            <section className="rounded-xl border border-[#e8e9ed] bg-white p-5 md:p-6"><div className="flex items-center justify-between"><div><h3 className="text-sm font-bold">Membership mix</h3><p className="mt-1 text-[10px] text-[#9a9ea6]">Current plan distribution</p></div><MoreHorizontal size={18} className="text-[#9a9ea6]"/></div><div className="mx-auto my-7 grid h-40 w-40 place-items-center rounded-full" style={{background:"conic-gradient(#d9ff35 0 48%, #b8c28d 48% 78%, #e7e9e2 78% 100%)"}}><div className="grid h-28 w-28 place-items-center rounded-full bg-white"><div className="text-center"><p className="text-2xl font-extrabold">248</p><p className="text-[9px] text-[#999da5]">TOTAL MEMBERS</p></div></div></div><div className="space-y-3">{[["Monthly","48%","#d9ff35"],["Quarterly","30%","#b8c28d"],["Yearly","22%","#e7e9e2"]].map(x=><div key={x[0]} className="flex items-center justify-between text-[10px]"><span className="flex items-center gap-2 text-[#737780]"><i className="h-2 w-2 rounded-sm" style={{background:x[2]}}/>{x[0]}</span><b>{x[1]}</b></div>)}</div></section>
+          </div>
+          <section className="mt-6 overflow-hidden rounded-xl border border-[#e8e9ed] bg-white"><div className="flex flex-col justify-between gap-4 p-5 md:flex-row md:items-center md:px-6"><div><h3 className="text-sm font-bold">Recent members</h3><p className="mt-1 text-[10px] text-[#9a9ea6]">A quick look at your latest registrations</p></div><div className="relative"><Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a0a4ab]"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search members..." className="w-full border border-[#e8e9ed] py-2.5 pl-9 pr-3 text-xs outline-none focus:border-[#9eae48] sm:w-[220px]"/></div></div><div className="overflow-x-auto"><table className="w-full min-w-[650px] text-left"><thead className="bg-[#f8f9fa] text-[9px] font-bold uppercase tracking-wider text-[#969ba3]"><tr>{["Member","Plan","Status","Joined",""].map(h=><th key={h} className="px-6 py-4">{h}</th>)}</tr></thead><tbody>{filtered.map(m=><tr key={m.email} className="border-t border-[#eff0f2] text-xs"><td className="px-6 py-4"><p className="font-bold">{m.name}</p><p className="mt-1 text-[10px] text-[#9a9ea6]">{m.email}</p></td><td className="px-6 py-4 text-[#707681]">{m.plan}</td><td className="px-6 py-4"><span className={`rounded-full px-2.5 py-1 text-[9px] font-bold ${m.status === "Active" ? "bg-[#eaf6ed] text-[#3e9156]" : m.status === "Pending" ? "bg-[#fff5df] text-[#b18025]" : "bg-[#fcebea] text-[#bd625a]"}`}>{m.status}</span></td><td className="px-6 py-4 text-[#858a94]">{m.joined}</td><td className="px-6 py-4 text-right"><button aria-label={`More options for ${m.name}`} className="text-[#a0a4ab]"><MoreHorizontal size={17}/></button></td></tr>)}{filtered.length===0 && <tr><td colSpan={5} className="px-6 py-10 text-center text-xs text-[#999da5]">No members match your search.</td></tr>}</tbody></table></div><div className="border-t border-[#eff0f2] px-6 py-4 text-[10px] text-[#969ba3]">Showing {filtered.length} of 248 members · Sample dashboard data</div></section>
+          <p className="mt-6 text-center text-[10px] text-[#a0a4ab]">IRONCORE FITNESS ADMIN · DEMO UI · NOT CONNECTED TO LIVE MEMBER DATA</p>
+        </div>
+      </div>
+    </main>
+  );
+}
